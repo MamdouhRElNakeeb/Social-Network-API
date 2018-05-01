@@ -1,0 +1,13 @@
+{
+    "name": "Social Network API",
+    "version": "1.0.0",
+    "description": "Social Network API Documentation",
+    "title": "Social Network API",
+    "url" : "http://64.52.86.76:5000/api/",
+    "sampleUrl": "http://64.52.86.76:5000/api/",
+    "template": {
+        "withCompare": true,
+        "withGenerator": true
+    }
+  }
+  

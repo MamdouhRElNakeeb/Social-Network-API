@@ -9,24 +9,11 @@ const user = require('../models/user');
 // Multer Upload Object
 const uplaod = require('../controllers/uploadFile');
 
-/**
- * @api {post} /signup Create a new User
- * @apiVersion 0.3.0
- * @apiName Signup
- * @apiPermission none
- *
- * @apiDescription In this case "apiErrorStructure" is defined and used.
- * Define blocks with params that will be used in several functions, so you dont have to rewrite them.
- *
- * @apiParam {String} name          User name.
- * @apiParam {String} email         User Email.
- * @apiParam {String} password      User password.
- * @apiParam {String} mobile        User mobile No.
- *
- * @apiSuccess {Boolean} success    True/False.
- * @apiSuccess {String} message    True/False.
- *
- */
+/*
+####################
+-> SignUp Resource
+####################
+*/
 
 router.post('/signup', (req, res, next) => {
     user.find({ email: req.body.email })
@@ -74,26 +61,11 @@ router.post('/signup', (req, res, next) => {
 
 
 
-/**
- * @api {post} /login Create a new User
- * @apiVersion 0.3.0
- * @apiName Signup
- * @apiPermission none
- *
- * @apiDescription In this case "apiErrorStructure" is defined and used.
- * Define blocks with params that will be used in several functions, so you dont have to rewrite them.
- *
- * @apiHeader {String} Content-Type application/json.
- * 
- * @apiParam {String} email         User Email.
- * @apiParam {String} password      User password.
- *
- * @apiSuccess {Boolean} success    True/False.
- * @apiSuccess {String} message    True/False.
- *
- * 
- */
-
+/*
+####################
+-> Login Resource
+####################
+*/
 router.post('/login', (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -154,34 +126,11 @@ router.get('/getAllusers', (req, res, next) => {
         })
 })
 
-/**
- * @api {get} /getuser/:id Read data of a User
- * @apiVersion 0.3.0
- * @apiName GetUser
- * @apiPermission none
- *
- * @apiDescription Compare Verison 0.3.0 with 0.2.0 and you will see the green markers with new items in version 0.3.0 and red markers with removed items since 0.2.0.
- *
- * @apiParam {Number} id The Users-ID.
- *
- * @apiExample Example usage:
- * curl -i http://localhost/getuser/5hkfajhkadkdfkadsj
- *
- * @apiSuccess {String}   _id            The Users-ID.
- * @apiSuccess {Date}     name           Fullname of the User.
- * @apiSuccess {String}   profileImage   Avatar-Image.
- * @apiSuccess {String}   email          Email.
- * @apiSuccess {String}   mobile         Mobile No.
- *
- * @apiError NoAccessRight Only authenticated Admins can access the data.
- * @apiError UserNotFound   The <code>id</code> of the User was not found.
- *
- * @apiErrorExample Response (example):
- *     HTTP/1.1 401 Not Authenticated
- *     {
- *       "error": "NoAccessRight"
- *     }
- */
+/*
+####################
+-> Get Single user Resource
+####################
+*/
 
 router.get('/getuser/:id', (req, res, next) => {
     const id = req.params.id;

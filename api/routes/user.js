@@ -3,12 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const helpers = require('../controllers/helpers/functions');
 
-// BRIDE MODEL
-const Bride = require('../models/bride');
-
-
-// REVIEW MODEL
-const Review = require('../models/review');
+// user MODEL
+const user = require('../models/user');
 
 // Multer Upload Object
 const uplaod = require('../controllers/uploadFile');
@@ -20,7 +16,7 @@ const uplaod = require('../controllers/uploadFile');
 */
 
 router.post('/signup', (req, res, next) => {
-    Bride.find({ email: req.body.email })
+    user.find({ email: req.body.email })
         .exec()
         .then(respond => {
             if (respond.length >= 1) {
@@ -34,7 +30,7 @@ router.post('/signup', (req, res, next) => {
                     if (err) {
                         res.status(500).json(helpers.errorJSON(err));
                     }
-                    const user = new Bride({
+                    const user = new user({
                         name: req.body.name,
                         email: req.body.email,
                         password: hash,
@@ -47,7 +43,7 @@ router.post('/signup', (req, res, next) => {
                             if (result) {
                                 res.status(200).json({
                                     success: true,
-                                    message: 'Bride Created Successfully'
+                                    message: 'user Created Successfully'
                                 })
                             }
                         })
@@ -74,11 +70,11 @@ router.post('/login', (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    Bride.find({ email: email })
+    user.find({ email: email })
         .exec()
         .then(respond => {
             if (respond.length <= 0) {
-                res.status(404).json(helpers.errorJSON('Bride not Found'));
+                res.status(404).json(helpers.errorJSON('user not Found'));
             } else {
                 bcrypt.compare(password, respond[0].password, (error, result) => {
                     if (error) {
@@ -104,24 +100,24 @@ router.post('/login', (req, res, next) => {
 
 /*
 ####################
--> Get All Brides Resource
+-> Get All users Resource
 ####################
 */
-router.get('/getAllBrides', (req, res, next) => {
-    Bride.find({})
+router.get('/getAllusers', (req, res, next) => {
+    user.find({})
         .exec()
         .then(respond => {
             if (respond.length >= 1) {
                 res.status(200).json({
                     success: true,
                     count: respond.length,
-                    brides: respond
+                    users: respond
                 })
             } else {
                 res.status(200).json({
                     count: 0,
                     success: true,
-                    message: 'There\'s not Brides Right Now!'
+                    message: 'There\'s not users Right Now!'
                 })
             }
         })
@@ -132,22 +128,22 @@ router.get('/getAllBrides', (req, res, next) => {
 
 /*
 ####################
--> Get Single Bride Resource
+-> Get Single user Resource
 ####################
 */
 
-router.get('/getBride/:id', (req, res, next) => {
+router.get('/getuser/:id', (req, res, next) => {
     const id = req.params.id;
-    Bride.findById(id)
+    user.findById(id)
         .exec()
         .then(respond => {
             if (respond) {
                 res.status(200).json({
                     success: true,
-                    bride: respond
+                    user: respond
                 })
             } else {
-                res.status(500).json(helpers.errorJSON('Bride Not Found'));
+                res.status(500).json(helpers.errorJSON('user Not Found'));
             }
         })
         .catch(err => {
@@ -157,7 +153,7 @@ router.get('/getBride/:id', (req, res, next) => {
 
 /*
 ####################
--> Update Bride Profile Resource
+-> Update user Profile Resource
 ####################
 */
 
@@ -172,7 +168,7 @@ router.patch('/updateProfile/:id', uplaod.single('profileImage'), (req, res, nex
     if (req.file) {
         updatedData['profileImage'] = req.file.path;
     }
-    Bride.update({ _id: id }, { $set: updatedData })
+    user.update({ _id: id }, { $set: updatedData })
         .exec()
         .then(respond => {
             if (respond) {
@@ -195,20 +191,20 @@ router.patch('/updateProfile/:id', uplaod.single('profileImage'), (req, res, nex
 
 /*
 ####################
--> Delete Bride Resource
+-> Delete user Resource
 ####################
 */
-router.delete('/deleteBride/:id', (req, res, next) => {
+router.delete('/deleteuser/:id', (req, res, next) => {
     const id = req.params.id;
-    const brideRemove = Bride.remove({ _id: id }).exec();
-    const reviewBrideRemove = Review.find({ bride: id }).exec();
+    const userRemove = user.remove({ _id: id }).exec();
+    const reviewuserRemove = Review.find({ user: id }).exec();
 
-    Promise.all([brideRemove, reviewBrideRemove])
+    Promise.all([userRemove, reviewuserRemove])
         .then(respond => {
             if (respond) {
                 res.status(200).json({
                     success: true,
-                    message: 'Bride Deleted Successfully!'
+                    message: 'user Deleted Successfully!'
                 })
             } else {
                 res.status(500).json(helpers.errorJSON('Something Went Wrong'));
@@ -223,17 +219,17 @@ router.delete('/deleteBride/:id', (req, res, next) => {
 
 /*
 ####################
--> Delete All Bride Resource
+-> Delete All user Resource
 ####################
 */
-router.delete('/deleteAllBrides', (req, res, next) => {
-    Bride.remove({})
+router.delete('/deleteAllusers', (req, res, next) => {
+    user.remove({})
         .exec()
         .then(respond => {
             if (respond) {
                 res.status(200).json({
                     success: true,
-                    message: 'Brides Deleted Successfully!'
+                    message: 'users Deleted Successfully!'
                 })
             } else {
                 res.status(500).json(helpers.errorJSON('Something Went Wrong'));
@@ -246,7 +242,7 @@ router.delete('/deleteAllBrides', (req, res, next) => {
 
 /*
 ####################
--> Help Bride Resource
+-> Help user Resource
 ####################
 */
 
@@ -257,44 +253,44 @@ router.get('/help/:unique', (req, res, next) => {
             status: 200,
             apis: [{
                 method: 'GET',
-                url: "http://localhost:3000/api/bride/getAllBrides",
-                response: "JSON: { _id(mongoose.id) , count(number of users) , success: true, brides: Array }",
-                info: "GET All brides"
+                url: "/api/user/getAllusers",
+                response: "JSON: { _id(mongoose.id) , count(number of users) , success: true, users: Array }",
+                info: "GET All users"
             }, {
                 method: 'GET',
-                url: "http://localhost:3000/api/bride/getBride/:id",
-                response: "JSON: { _id(mongoose.id) , bride: Bride , success: true }",
-                info: "GET All bride"
+                url: "/api/user/getuser/:id",
+                response: "JSON: { _id(mongoose.id) , user: user , success: true }",
+                info: "GET All user"
             }, {
                 method: 'POST',
-                url: "http://localhost:3000/api/bride/login",
+                url: "/api/user/login",
                 body: "JSON: { email: Email, password: String }",
                 response: "{ success: true , message: String  }",
-                info: "Login bride"
+                info: "Login user"
 
             }, {
                 method: 'POST',
-                url: "http://localhost:3000/api/bride/signup",
+                url: "/api/user/signup",
                 body: "JSON: { name: String, email: Email, mobile:Number , password: String }",
                 response: "{ success: true , message: String  }",
-                info: "Create Bride Account"
+                info: "Create user Account"
             }, {
                 method: 'DELETE',
-                url: "http://localhost:3000/api/bride/deleteBride/:id",
+                url: "/api/user/deleteuser/:id",
                 response: "JSON: { success: true , message: String }",
-                info: "Delete Bride"
+                info: "Delete user"
             }, {
                 method: 'DELETE',
-                url: "http://localhost:3000/api/bride/deleteAllBrides",
+                url: "/api/user/deleteAllusers",
                 response: "JSON: { success: true , message: String }",
-                info: "Delete All Brides"
+                info: "Delete All users"
             },
             {
                 method: 'PATCH',
-                url: "http://localhost:3000/api/bride/updateProfile/:id",
+                url: "/api/user/updateProfile/:id",
                 body: "Send What you want to updated",
                 response: "JSON: { success: true , message: String }",
-                info: "Update Bride Profile"
+                info: "Update user Profile"
             }]
         })
     } else {

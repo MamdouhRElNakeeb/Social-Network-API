@@ -24,21 +24,10 @@ app.use('/uploads', express.static('uploads'))
  # Routes 
 */
 // Import Routes
-const coiffeur = require('./api/routes/coiffeur');
-const bride = require('./api/routes/bride');
-const review = require('./api/routes/review');
-const admin = require('./api/routes/admin');
-const gallery = require('./api/routes/gallery');
+const user = require('./api/routes/user');
+
 // Use Routes
-app.use('/api/coiffeur', coiffeur);
-app.use('/api/bride', bride);
-app.use('/api/review', review);
-app.use('/api/admin', admin);
-app.use('/api/gallery', gallery);
-
-
-
-
+app.use('/api/user', user);
 
 
 // Handel Unknow Resources

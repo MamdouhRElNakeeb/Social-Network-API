@@ -26,7 +26,6 @@ const uplaod = require('../controllers/uploadFile');
  * @apiSuccess {Boolean} success    True/False.
  * @apiSuccess {String} message    True/False.
  *
- * @apiUse CreateUserError
  */
 
 router.post('/signup', (req, res, next) => {
@@ -92,7 +91,7 @@ router.post('/signup', (req, res, next) => {
  * @apiSuccess {Boolean} success    True/False.
  * @apiSuccess {String} message    True/False.
  *
- * @apiUse CreateUserError
+ * 
  */
 
 router.post('/login', (req, res, next) => {

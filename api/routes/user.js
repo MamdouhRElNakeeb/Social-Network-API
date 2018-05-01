@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const helpers = require('../controllers/helpers/functions');
 
 // user MODEL
-const user = require('../models/user');
+const User = require('../models/user');
 
 // Multer Upload Object
 const uplaod = require('../controllers/uploadFile');
@@ -16,7 +16,7 @@ const uplaod = require('../controllers/uploadFile');
 */
 
 router.post('/signup', (req, res, next) => {
-    user.find({ email: req.body.email })
+    User.find({ email: req.body.email })
         .exec()
         .then(respond => {
             if (respond.length >= 1) {
@@ -30,20 +30,20 @@ router.post('/signup', (req, res, next) => {
                     if (err) {
                         res.status(500).json(helpers.errorJSON(err));
                     }
-                    const user = new user({
+                    const user = new User({
                         name: req.body.name,
                         email: req.body.email,
                         password: hash,
                         mobile: req.body.mobile
                     });
 
-                    user
+                    User
                         .save()
                         .then(result => {
                             if (result) {
                                 res.status(200).json({
                                     success: true,
-                                    message: 'user Created Successfully'
+                                    message: 'User Created Successfully'
                                 })
                             }
                         })
@@ -70,7 +70,7 @@ router.post('/login', (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    user.find({ email: email })
+    User.find({ email: email })
         .exec()
         .then(respond => {
             if (respond.length <= 0) {
@@ -104,7 +104,7 @@ router.post('/login', (req, res, next) => {
 ####################
 */
 router.get('/getAllusers', (req, res, next) => {
-    user.find({})
+    User.find({})
         .exec()
         .then(respond => {
             if (respond.length >= 1) {
@@ -134,7 +134,7 @@ router.get('/getAllusers', (req, res, next) => {
 
 router.get('/getuser/:id', (req, res, next) => {
     const id = req.params.id;
-    user.findById(id)
+    User.findById(id)
         .exec()
         .then(respond => {
             if (respond) {
@@ -168,7 +168,7 @@ router.patch('/updateProfile/:id', uplaod.single('profileImage'), (req, res, nex
     if (req.file) {
         updatedData['profileImage'] = req.file.path;
     }
-    user.update({ _id: id }, { $set: updatedData })
+    User.update({ _id: id }, { $set: updatedData })
         .exec()
         .then(respond => {
             if (respond) {
@@ -196,7 +196,7 @@ router.patch('/updateProfile/:id', uplaod.single('profileImage'), (req, res, nex
 */
 router.delete('/deleteuser/:id', (req, res, next) => {
     const id = req.params.id;
-    const userRemove = user.remove({ _id: id }).exec();
+    const userRemove = User.remove({ _id: id }).exec();
     const reviewuserRemove = Review.find({ user: id }).exec();
 
     Promise.all([userRemove, reviewuserRemove])
@@ -223,7 +223,7 @@ router.delete('/deleteuser/:id', (req, res, next) => {
 ####################
 */
 router.delete('/deleteAllusers', (req, res, next) => {
-    user.remove({})
+    User.remove({})
         .exec()
         .then(respond => {
             if (respond) {

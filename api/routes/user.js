@@ -80,7 +80,6 @@ router.post('/signup', (req, res, next) => {
  * @api {post} /login Create a new User
  * @apiVersion 0.3.0
  * @apiName Signup
- * @apiGroup User
  * @apiPermission none
  *
  * @apiDescription In this case "apiErrorStructure" is defined and used.

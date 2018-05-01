@@ -37,7 +37,7 @@ router.post('/signup', (req, res, next) => {
                         mobile: req.body.mobile
                     });
 
-                    User
+                    user
                         .save()
                         .then(result => {
                             if (result) {

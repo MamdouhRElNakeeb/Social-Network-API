@@ -13,7 +13,6 @@ const uplaod = require('../controllers/uploadFile');
  * @api {post} /signup Create a new User
  * @apiVersion 0.3.0
  * @apiName Signup
- * @apiGroup User
  * @apiPermission none
  *
  * @apiDescription In this case "apiErrorStructure" is defined and used.
@@ -160,7 +159,6 @@ router.get('/getAllusers', (req, res, next) => {
  * @api {get} /getuser/:id Read data of a User
  * @apiVersion 0.3.0
  * @apiName GetUser
- * @apiGroup User
  * @apiPermission none
  *
  * @apiDescription Compare Verison 0.3.0 with 0.2.0 and you will see the green markers with new items in version 0.3.0 and red markers with removed items since 0.2.0.

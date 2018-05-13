@@ -27,17 +27,17 @@ const userSchema = mongoose.Schema({
        type :String
     },
     followers:[
-          {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-           }
-      ],
-      following:[
-            {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: 'User'
-            }
-        ]
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User'
+        }
+    ],
+    following:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 });
 
 

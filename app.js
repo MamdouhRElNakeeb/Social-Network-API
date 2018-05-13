@@ -26,10 +26,12 @@ app.use('/uploads', express.static('uploads'))
 // Import Routes
 const help = require('./api/routes/help');
 const user = require('./api/routes/user');
+const post = require('./api/routes/post');
 
 // Use Routes
 app.use('/api/user', user);
 app.use('/api/help', help);
+app.use('/api/post', post);
 
 
 // Handel Unknow Resources

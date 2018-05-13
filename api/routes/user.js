@@ -43,7 +43,8 @@ router.post('/signup', (req, res, next) => {
                             if (result) {
                                 res.status(200).json({
                                     success: true,
-                                    message: 'User Created Successfully'
+                                    message: 'User Created Successfully',
+                                    user:user
                                 })
                             }
                         })
@@ -82,9 +83,20 @@ router.post('/login', (req, res, next) => {
                     }
 
                     if (result === true) {
+
+                      const user = new User({
+                          name: req.body.name,
+                          email: req.body.email,
+                          password: respond[0].password,
+                          mobile:  respond[0].mobile,
+                          id:  respond[0]._id
+                      });
+
                         res.status(200).json({
                             success: true,
-                            message: 'You are Logged In Successfully'
+                            message: 'You are Logged In Successfully',
+                            usesr: user
+
                         });
                     } else {
                         res.status(404).json(helpers.errorJSON('Email or Password is not correct'))

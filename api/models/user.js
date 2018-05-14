@@ -27,24 +27,8 @@ const userSchema = mongoose.Schema({
     },
     bio:{
        type :String
-    },
-    followers:[
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User'
-        }
-    ],
-    following:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ]
+    }
 });
-
-
-
-
 
 const userModel = mongoose.model('User', userSchema);
 

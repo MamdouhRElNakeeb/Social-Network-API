@@ -5,6 +5,7 @@ const helpers = require('../controllers/helpers/functions');
 
 // user MODEL
 const User = require('../models/user');
+const UserFollow = require('../models/userFollow');
 
 // Multer Upload Object
 const uplaod = require('../controllers/uploadFile');
@@ -40,10 +41,17 @@ router.post('/signup', (req, res, next) => {
                         cover: 'cover'
                     });
 
+                    const userFollow = new UserFollow({
+                        user: user._id,
+                        followers:[],
+                        following:[]
+                    });
+
                     user
                         .save()
                         .then(result => {
                             if (result) {
+                                userFollow.save();
                                 res.status(200).json({
                                     success: true,
                                     message: 'User Created Successfully',
@@ -98,7 +106,8 @@ router.post('/login', (req, res, next) => {
                         res.status(200).json({
                             success: true,
                             message: 'You are Logged In Successfully',
-                            usesr: user
+                            usesr: user,
+                            user: user
 
                         });
                     } else {
@@ -119,7 +128,7 @@ router.post('/follow', (req, res, next) => {
 
     following.push(followingID);
 
-    User.update({ _id: myID }, {
+    UserFollow.update({ _id: myID }, {
         $push: {
             following: {
                 $each: following
@@ -130,7 +139,7 @@ router.post('/follow', (req, res, next) => {
     .then(respond => {
         if (respond) {
 
-            User.update({ _id: followingID }, {
+            UserFollow.update({ _id: followingID }, {
                 $push: {
                     followers: {
                         $each: following
@@ -163,7 +172,9 @@ router.post('/follow', (req, res, next) => {
 ####################
 */
 router.get('/getAllusers', (req, res, next) => {
-    User.find({})
+    UserFollow.find({})
+        .select('user followers following')
+        .populate('user', 'name profileImage email mobile')
         .exec()
         .then(respond => {
             if (respond.length >= 1) {

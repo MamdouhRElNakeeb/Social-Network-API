@@ -164,8 +164,6 @@ router.post('/follow', (req, res, next) => {
 */
 router.get('/getAllusers', (req, res, next) => {
     User.find({})
-        .select('followers following')
-        .populate('user', 'name profileImage')
         .exec()
         .then(respond => {
             if (respond.length >= 1) {

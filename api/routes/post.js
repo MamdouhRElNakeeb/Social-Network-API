@@ -50,6 +50,39 @@ router.post('/signup', (req, res, next) => {
 
 
 
+router.post('/newPost', upload.single('image'), (req, res, next) => {
+    const galleryNames = [];
+    const text = req.body.text;
+    const user = req.body.id;
+    const image = '';
+
+    if(req.file){
+        image = req.file.path;
+    }
+
+    const post = new Post({
+        user: user,
+        text: text,
+        image: image
+    });
+    
+    const post = new Post(post);
+    post
+        .save()
+        .then(respond => {
+            if (respond) {
+                res.status(200).json({
+                    success: true,
+                    message: 'Post Added Successfully!'
+                })
+            } else {
+                res.status(500).json(helpers.errorJSON('Something Went Wrong!'))
+            }
+        })
+        .catch(err => res.status(500).json(helpers.errorJSON(err)))
+        
+});
+
 
 /*
 ####################

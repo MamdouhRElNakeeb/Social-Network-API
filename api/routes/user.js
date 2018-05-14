@@ -36,7 +36,8 @@ router.post('/signup', (req, res, next) => {
                         password: hash,
                         mobile: req.body.mobile,
                         profileImage: 'img',
-                        bio: 'bio'
+                        bio: 'bio',
+                        cover: 'cover'
                     });
 
                     user
@@ -163,6 +164,7 @@ router.post('/follow', (req, res, next) => {
 */
 router.get('/getAllusers', (req, res, next) => {
     User.find({})
+        .select('followers following')
         .populate('user', 'name profileImage')
         .exec()
         .then(respond => {

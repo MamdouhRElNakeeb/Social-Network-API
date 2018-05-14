@@ -51,7 +51,7 @@ router.post('/signup', (req, res, next) => {
 
 
 router.post('/newPost', upload.single('image'), (req, res, next) => {
-    const galleryNames = [];
+
     const text = req.body.text;
     const user = req.body.id;
     const image = '';
@@ -66,7 +66,6 @@ router.post('/newPost', upload.single('image'), (req, res, next) => {
         image: image
     });
     
-    const post = new Post(post);
     post
         .save()
         .then(respond => {

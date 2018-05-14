@@ -111,6 +111,50 @@ router.post('/login', (req, res, next) => {
         })
 })
 
+router.post('/follow', (req, res, next) => {
+    const following = [];
+    const myID = req.body.myID;
+    const followingID = req.body.followingID;
+
+    following.push(followingID);
+
+    User.update({ _id: myID }, {
+        $push: {
+            following: {
+                $each: following
+            }
+        }
+    })
+    .exec()
+    .then(respond => {
+        if (respond) {
+
+            User.update({ _id: followingID }, {
+                $push: {
+                    followers: {
+                        $each: following
+                    }
+                }
+            })
+            .exec()
+            .then(respond => {
+                if (respond) {
+                    res.status(200).json({
+                        success: true,
+                        message: 'You\'ve followed this user successfully'
+                    })
+                } else {
+                    res.status(500).json(helpers.errorJSON('Something Went Wrong!'));
+                }
+            })
+            .catch(err => res.status(500).json(helpers.errorJSON(err)));
+        } else {
+            res.status(500).json(helpers.errorJSON('Something Went Wrong!'));
+        }
+    })
+    .catch(err => res.status(500).json(helpers.errorJSON(err)));
+
+});
 
 /*
 ####################

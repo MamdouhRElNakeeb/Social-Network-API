@@ -21,7 +21,9 @@ const userSchema = mongoose.Schema({
     },
     profileImage:{
         type: String
-
+    },
+    cover:{
+        type: String
     },
     bio:{
        type :String

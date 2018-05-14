@@ -171,7 +171,33 @@ router.get('/getuser/:id', (req, res, next) => {
 ####################
 */
 
-router.patch('/updateProfile/:id', uplaod.single('profileImage'), (req, res, next) => {
+router.post('/updateProfile/:id', (req, res, next) => {
+    const id = req.params.id;
+    const updatedData = {};
+    for (let key in req.body) {
+        if (req.body[key] !== '') {
+            updatedData[key] = req.body[key];
+        }
+    }
+    User.update({ _id: id }, { $set: updatedData })
+        .exec()
+        .then(respond => {
+            if (respond) {
+                res.status(200).json({
+                    success: true,
+                    message: 'Your Profile Updated Successfully!'
+                })
+            } else {
+                res.status(500).json(helpers.errorJSON('Something Went Error!'));
+            }
+        })
+        .catch(err => {
+            res.status(500).json(helpers.errorJSON(err));
+        })
+
+})
+
+router.post('/updateProfileImage/:id', uplaod.single('profileImage'), (req, res, next) => {
     const id = req.params.id;
     const updatedData = {};
     for (let key in req.body) {
@@ -199,6 +225,36 @@ router.patch('/updateProfile/:id', uplaod.single('profileImage'), (req, res, nex
         })
 
 })
+
+router.post('/updateProfileCover/:id', uplaod.single('cover'), (req, res, next) => {
+    const id = req.params.id;
+    const updatedData = {};
+    for (let key in req.body) {
+        if (req.body[key] !== '') {
+            updatedData[key] = req.body[key];
+        }
+    }
+    if (req.file) {
+        updatedData['profileImage'] = req.file.path;
+    }
+    User.update({ _id: id }, { $set: updatedData })
+        .exec()
+        .then(respond => {
+            if (respond) {
+                res.status(200).json({
+                    success: true,
+                    message: 'Your Profile Updated Successfully!'
+                })
+            } else {
+                res.status(500).json(helpers.errorJSON('Something Went Error!'));
+            }
+        })
+        .catch(err => {
+            res.status(500).json(helpers.errorJSON(err));
+        })
+
+})
+
 
 
 

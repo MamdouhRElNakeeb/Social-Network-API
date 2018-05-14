@@ -163,6 +163,7 @@ router.post('/follow', (req, res, next) => {
 */
 router.get('/getAllusers', (req, res, next) => {
     User.find({})
+        .populate('user', 'name profileImage')
         .exec()
         .then(respond => {
             if (respond.length >= 1) {

@@ -141,7 +141,6 @@ router.post('/comment', (req, res, next) => {
 
 router.post('/removeComment', (req, res, next) => {
 
-    const text = req.body.text;
     const commentID = req.body.commentID;
     const postID = req.body.postID;
     
@@ -179,6 +178,8 @@ router.get('/getUserPosts/:id', (req, res, next) => {
     const id = req.params.id;
     
     Post.find({user: id})
+        .populate('likes', 'name profileImage')
+        .populate('comments', 'name profileImage')
         .exec()
         .then(respond => {
             if (respond.length >= 1) {
@@ -214,6 +215,8 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
             if (respond.length >= 1) {
 
                 Post.find({ user: { $in: respond[0].following} })
+                    .populate('likes', 'name profileImage')
+                    .populate('comments', 'name profileImage')
                     .exec()
                     .then(respond => {
                         console.log(respond);
@@ -264,6 +267,8 @@ router.get('/getPost/:id', (req, res, next) => {
     const id = req.params.id;
 
     Post.findById(id)
+        .populate('likes', 'name profileImage')
+        .populate('comments', 'name profileImage')
         .exec()
         .then(respond => {
             if (respond) {

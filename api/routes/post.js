@@ -63,7 +63,7 @@ router.post('/like', (req, res, next) => {
     const userID = req.body.userID;
 
     Post.update({ _id: postID }, {
-        $push: {
+        $addToSet: {
             likes: userID
         }
     })

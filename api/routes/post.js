@@ -125,7 +125,7 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
         .then(respond => {
             if (respond.length >= 1) {
 
-                Post.find({ _id: { $in: respond[0].following} })
+                Post.find({ _id: { $in: respond} })
                     .exec()
                     .then(respond => {
                         if (respond.length >= 1) {

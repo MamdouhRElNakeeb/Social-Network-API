@@ -36,7 +36,9 @@ router.post('/newPost', upload.single('image'), (req, res, next) => {
     const post = new Post({
         user: user,
         text: text,
-        image: image
+        image: image,
+        likes: [],
+        comments: []
     });
     
     post
@@ -55,6 +57,55 @@ router.post('/newPost', upload.single('image'), (req, res, next) => {
         
 });
 
+router.post('/like', (req, res, next) => {
+
+    const postID = req.body.postID;
+    const userID = req.body.userID;
+
+    Post.update({ _id: postID }, {
+        $push: {
+            likes: userID
+        }
+    })
+    .exec()
+    .then(respond => {
+        if (respond) {
+            res.status(200).json({
+                success: true,
+                message: 'Post liked Successfully!'
+            })
+        } else {
+            res.status(500).json(helpers.errorJSON('Something Went Wrong!'))
+        }
+    })
+    .catch(err => res.status(500).json(helpers.errorJSON(err)))
+        
+});
+
+router.post('/unlike', (req, res, next) => {
+
+    const postID = req.body.postID;
+    const userID = req.body.userID;
+
+    Post.update({ _id: postID }, {
+        $pull: {
+            likes: userID
+        }
+    })
+    .exec()
+    .then(respond => {
+        if (respond) {
+            res.status(200).json({
+                success: true,
+                message: 'Post unliked Successfully!'
+            })
+        } else {
+            res.status(500).json(helpers.errorJSON('Something Went Wrong!'))
+        }
+    })
+    .catch(err => res.status(500).json(helpers.errorJSON(err)))
+        
+});
 
 /*
 ####################

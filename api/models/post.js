@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const PostSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'UserData',
         required: true
     },
     text: {

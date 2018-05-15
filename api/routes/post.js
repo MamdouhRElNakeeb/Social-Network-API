@@ -7,11 +7,11 @@ const helpers = require('../controllers/helpers/functions');
 // Multer Upload Object
 const upload = require('../controllers/uploadFile');
 
-// Require Coiffeur Model
-const Coiffeur = require('../models/coiffeur');
+// Require User Model
+const User = require('../models/user');
 
 // GALLERY MODEL
-const Gallery = require('../models/gallery');
+const Post = require('../models/post');
 
 
 /*
@@ -149,6 +149,70 @@ router.get('/getAllPosts/:id', (req, res, next) => {
             res.status(500).json(helpers.errorJSON(error))
         })
 })
+
+router.get('/getNewsFeed/:id', (req, res, next) => {
+    const id = req.params.id;
+
+    User.find({_id: id})
+        .select('following')
+        .exec()
+        .then(respond => {
+            if (respond.length >= 1) {
+
+                Post.find({ _id: { $in: respond[0].following} })
+                    .exec()
+                    .then(respond => {
+                        if (respond.length >= 1) {
+
+                            res.status(200).json({
+                                success: true,
+                                count: respond.length,
+                                posts: respond
+                            })
+                        } else {
+
+                            res.status(200).json({
+                                count: 0,
+                                success: true,
+                                message: 'Your friends don\'nt have posts right now'
+                            })
+                        }
+                        
+                    })
+                    .catch(error => {
+                        res.status(500).json(helpers.errorJSON(error))
+                    })
+                
+            } else {
+                res.status(200).json({
+                    count: 0,
+                    success: true,
+                    message: 'Follow some people to get their posts'
+                })
+            }
+        })
+        
+      Post.find({user: id})
+          .exec()
+          .then(respond => {
+              if (respond.length >= 1) {
+                  res.status(200).json({
+                      success: true,
+                      count: respond.length,
+                      posts: respond
+                  })
+              } else {
+                  res.status(200).json({
+                      count: 0,
+                      success: true,
+                      message: 'There\'s not posts Right Now!'
+                  })
+              }
+          })
+          .catch(error => {
+              res.status(500).json(helpers.errorJSON(error))
+          })
+  })
 
 
 /*

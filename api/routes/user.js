@@ -221,42 +221,6 @@ router.post('/unfollow', (req, res, next) => {
 
 });
 
-router.post('/unfollow00', (req, res, next) => {
-    const myID = req.body.myID;
-    const followingID = req.body.followingID;
-
-    const user = User.find({UserData: myID}).exec();
-    const followedUser = User.find({UserData: followingID}).exec();
-
-    User.update( {userData: myID}, { 
-        $pullAll: {_id: [req.params.deleteUid] 
-        } 
-    })
-
-    user.followers
-        .pull({ _id: followingID })
-        .exec()
-        .then(respond => {
-            if (respond){
-
-                followedUser.followers
-                    .pull({ _id: followingID })
-                    .exec()
-                    .then(respond => {
-                        if (respond){
-                            res.status(200).json({
-                                success: true,
-                                message: 'You\'ve unfollowed this user successfully'
-                            })
-                        }
-                    })
-                    .catch(err => res.status(500).json(helpers.errorJSON(err)));
-        
-            }
-        })
-        .catch(err => res.status(500).json(helpers.errorJSON(err)));
-});
-
 /*
 ####################
 -> Get All users Resource

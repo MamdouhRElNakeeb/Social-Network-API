@@ -214,7 +214,7 @@ router.post('/unfollow', (req, res, next) => {
 */
 router.get('/getAllusers', (req, res, next) => {
     User.find({})
-        .select('user followers following -_id __v')
+        .select('user followers following -_id -__v')
         .populate('user', 'name profileImage email mobile')
         .populate('followers', 'name profileImage')
         .populate('following', 'name profileImage')
@@ -259,7 +259,7 @@ router.get('/getuser/:id', (req, res, next) => {
                 res.status(200).json({
                     success: true,
                     user: {
-                        id: respond.user._id,
+                        _id: respond.user._id,
                         name: respond.user.name,
                         email: respond.user.email,
                         mobile: respond.user.mobile,

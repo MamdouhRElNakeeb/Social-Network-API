@@ -178,18 +178,64 @@ router.post('/follow', (req, res, next) => {
 
 });
 
-
 router.post('/unfollow', (req, res, next) => {
     const following = [];
+    const followers = [];
     const myID = req.body.myID;
     const followingID = req.body.followingID;
 
     following.push(followingID);
+    followers.push(myID);
+
+    User.update({ userData: myID }, {
+        $pull: {
+            following: {
+                $each: following
+            }
+        }
+    })
+    .exec()
+    .then(respond => {
+        if (respond) {
+
+            User.update({ userData: followingID }, {
+                $pull: {
+                    followers: {
+                        $each: followers
+                    }
+                }
+            })
+            .exec()
+            .then(respond => {
+                if (respond) {
+                    res.status(200).json({
+                        success: true,
+                        message: 'You\'ve unfollowed this user successfully'
+                    })
+                } else {
+                    res.status(500).json(helpers.errorJSON('Something Went Wrong!'));
+                }
+            })
+            .catch(err => res.status(500).json(helpers.errorJSON(err)));
+        } else {
+            res.status(500).json(helpers.errorJSON('Something Went Wrong!'));
+        }
+    })
+    .catch(err => res.status(500).json(helpers.errorJSON(err)));
+
+});
+
+router.post('/unfollow00', (req, res, next) => {
+    const myID = req.body.myID;
+    const followingID = req.body.followingID;
 
     const user = User.find({UserData: myID}).exec();
     const followedUser = User.find({UserData: followingID}).exec();
 
-    // User.update( {userData: myID}, { $pullAll: {uid: [req.params.deleteUid] } } )
+    User.update( {userData: myID}, { 
+        $pullAll: {_id: [req.params.deleteUid] 
+        } 
+    })
 
     user.followers
         .pull({ _id: followingID })

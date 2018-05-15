@@ -5,7 +5,7 @@ const helpers = require('../controllers/helpers/functions');
 
 // user MODEL
 const User = require('../models/user');
-const UserFollow = require('../models/userFollow');
+const UserData = require('../models/userData');
 
 // Multer Upload Object
 const uplaod = require('../controllers/uploadFile');
@@ -17,7 +17,7 @@ const uplaod = require('../controllers/uploadFile');
 */
 
 router.post('/signup', (req, res, next) => {
-    User.find({ email: req.body.email })
+    UserData.find({ email: req.body.email })
         .exec()
         .then(respond => {
             if (respond.length >= 1) {
@@ -31,7 +31,7 @@ router.post('/signup', (req, res, next) => {
                     if (err) {
                         res.status(500).json(helpers.errorJSON(err));
                     }
-                    const user = new User({
+                    const userData = new UserData({
                         name: req.body.name,
                         email: req.body.email,
                         password: hash,
@@ -41,27 +41,36 @@ router.post('/signup', (req, res, next) => {
                         cover: 'cover'
                     });
 
-                    const userFollow = new UserFollow({
-                        user: user._id,
-                        followers:[],
-                        following:[]
-                    });
-
-                    user
+                    userData
                         .save()
                         .then(result => {
-                            if (result) {
-                                userFollow.save();
-                                res.status(200).json({
-                                    success: true,
-                                    message: 'User Created Successfully',
-                                    user:user
-                                })
+                            if(result){
+                                
+                                const user = new User({
+                                    userData: userData._id,
+                                    followers:[],
+                                    following:[]
+                                });
+            
+                                user
+                                    .save()
+                                    .then(result => {
+                                        if (result) {
+                                            userFollow.save();
+                                            res.status(200).json({
+                                                success: true,
+                                                message: 'User Created Successfully',
+                                                user:userData
+                                            })
+                                        }
+                                    })
+                                    .catch(saveError => {
+                                        res.status(500).json(helpers.errorJSON(saveError))
+                                    })
+
                             }
                         })
-                        .catch(saveError => {
-                            res.status(500).json(helpers.errorJSON(saveError))
-                        })
+
                 })
             }
         })
@@ -172,9 +181,9 @@ router.post('/follow', (req, res, next) => {
 ####################
 */
 router.get('/getAllusers', (req, res, next) => {
-    UserFollow.find({})
-        .select('user followers following')
-        .populate('user', 'name profileImage email mobile')
+    User.find({})
+        .select('userData followers following')
+        .populate('userData', 'name profileImage email mobile')
         .exec()
         .then(respond => {
             if (respond.length >= 1) {

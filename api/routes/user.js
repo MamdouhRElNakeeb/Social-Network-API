@@ -36,9 +36,9 @@ router.post('/signup', (req, res, next) => {
                         email: req.body.email,
                         password: hash,
                         mobile: req.body.mobile,
-                        profileImage: 'img',
-                        bio: 'bio',
-                        cover: 'cover'
+                        profileImage: '',
+                        bio: '',
+                        cover: ''
                     });
 
                     userData

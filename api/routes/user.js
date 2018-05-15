@@ -60,7 +60,7 @@ router.post('/signup', (req, res, next) => {
                                             res.status(200).json({
                                                 success: true,
                                                 message: 'User Created Successfully',
-                                                user:userData
+                                                user: userData
                                             })
                                         }
                                     })
@@ -91,7 +91,7 @@ router.post('/login', (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    User.find({ email: email })
+    UserData.find({ email: email })
         .exec()
         .then(respond => {
             if (respond.length <= 0) {
@@ -104,7 +104,7 @@ router.post('/login', (req, res, next) => {
 
                     if (result === true) {
 
-                      const user = new User({
+                      const userData = new UserData({
                           name: req.body.name,
                           email: req.body.email,
                           password: respond[0].password,
@@ -115,8 +115,8 @@ router.post('/login', (req, res, next) => {
                         res.status(200).json({
                             success: true,
                             message: 'You are Logged In Successfully',
-                            usesr: user,
-                            user: user
+                            usesr: userData,
+                            user: userData
 
                         });
                     } else {
@@ -137,7 +137,7 @@ router.post('/follow', (req, res, next) => {
 
     following.push(followingID);
 
-    UserFollow.update({ _id: myID }, {
+    User.update({ userData: myID }, {
         $push: {
             following: {
                 $each: following
@@ -148,7 +148,7 @@ router.post('/follow', (req, res, next) => {
     .then(respond => {
         if (respond) {
 
-            UserFollow.update({ _id: followingID }, {
+            User.update({ userData: followingID }, {
                 $push: {
                     followers: {
                         $each: following
@@ -184,6 +184,8 @@ router.get('/getAllusers', (req, res, next) => {
     User.find({})
         .select('userData followers following')
         .populate('userData', 'name profileImage email mobile')
+        .populate('followers', 'name email')
+        .populate('following', 'name mobile')
         .exec()
         .then(respond => {
             if (respond.length >= 1) {

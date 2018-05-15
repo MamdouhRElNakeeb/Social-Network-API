@@ -189,9 +189,7 @@ router.post('/unfollow', (req, res, next) => {
 
     User.update({ userData: myID }, {
         $pull: {
-            following: {
-                _id: followingID
-            }
+            following: followingID
         }
     })
     .exec()
@@ -200,9 +198,7 @@ router.post('/unfollow', (req, res, next) => {
 
             User.update({ userData: followingID }, {
                 $pull: {
-                    followers: {
-                        _id: myID
-                    }
+                    followers: myID
                 }
             })
             .exec()

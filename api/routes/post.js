@@ -107,6 +107,67 @@ router.post('/unlike', (req, res, next) => {
         
 });
 
+router.post('/comment', (req, res, next) => {
+
+    const text = req.body.text;
+    const userID = req.body.userID;
+    const postID = req.body.postID;
+
+    const comment = {
+        user: userID,
+        text: text
+    };
+    
+    Post.update({ _id: postID}, {
+        $push: {
+            comments: comment
+        }
+    })
+    .exec()
+    .then(respond => {
+        if (respond) {
+            res.status(200).json({
+                success: true,
+                message: 'comment Added Successfully!'
+            })
+        } else {
+            res.status(500).json(helpers.errorJSON('Something Went Wrong!'))
+        }
+    })
+    .catch(err => res.status(500).json(helpers.errorJSON(err)))
+        
+        
+});
+
+router.post('/removeComment', (req, res, next) => {
+
+    const text = req.body.text;
+    const commentID = req.body.commentID;
+    const postID = req.body.postID;
+    
+    Post.update({ _id: postID}, {
+        $pull: {
+            comments: {
+                _id: commentID
+            }
+        }
+    })
+    .exec()
+    .then(respond => {
+        if (respond) {
+            res.status(200).json({
+                success: true,
+                message: 'comment removed Successfully!'
+            })
+        } else {
+            res.status(500).json(helpers.errorJSON('Something Went Wrong!'))
+        }
+    })
+    .catch(err => res.status(500).json(helpers.errorJSON(err)))
+        
+        
+});
+
 /*
 ####################
 -> Get All Brides Resource

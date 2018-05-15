@@ -13,7 +13,25 @@ const PostSchema = mongoose.Schema({
     },
     image: {
         type: String
-    }
+    },
+    likes:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'UserData'
+        }
+    ],
+    comments:[
+        {
+            user: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'UserData'
+            },
+            text: {
+                type: String
+            }
+            
+        }
+    ]
 });
 
 

@@ -132,19 +132,13 @@ router.post('/login', (req, res, next) => {
 })
 
 router.post('/follow', (req, res, next) => {
-    const following = [];
-    const followers = [];
+   
     const myID = req.body.myID;
     const followingID = req.body.followingID;
 
-    following.push(followingID);
-    followers.push(myID);
-
     User.update({ userData: myID }, {
-        $push: {
-            following: {
-                $each: following
-            }
+        $addToSet: {
+            following: followingID
         }
     })
     .exec()
@@ -152,10 +146,8 @@ router.post('/follow', (req, res, next) => {
         if (respond) {
 
             User.update({ userData: followingID }, {
-                $push: {
-                    followers: {
-                        $each: followers
-                    }
+                $addToSet: {
+                    followers: myID
                 }
             })
             .exec()
@@ -179,13 +171,9 @@ router.post('/follow', (req, res, next) => {
 });
 
 router.post('/unfollow', (req, res, next) => {
-    const following = [];
-    const followers = [];
     const myID = req.body.myID;
     const followingID = req.body.followingID;
 
-    following.push(followingID);
-    followers.push(myID);
 
     User.update({ userData: myID }, {
         $pull: {

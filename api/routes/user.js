@@ -68,6 +68,9 @@ router.post('/signup', (req, res, next) => {
 
                             }
                         })
+                        .catch(saveError => {
+                            res.status(500).json(helpers.errorJSON(saveError))
+                        })
 
                 })
             }

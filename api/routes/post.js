@@ -128,6 +128,7 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
                 Post.find({ _id: { $in: respond} })
                     .exec()
                     .then(respond => {
+                        console.log(respond);
                         if (respond.length >= 1) {
 
                             res.status(200).json({

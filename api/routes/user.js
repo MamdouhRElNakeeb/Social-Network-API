@@ -45,7 +45,6 @@ router.post('/signup', (req, res, next) => {
                         .save()
                         .then(result => {
                             if(result){
-                                
                                 const user = new User({
                                     userData: userData._id,
                                     followers:[],
@@ -56,7 +55,6 @@ router.post('/signup', (req, res, next) => {
                                     .save()
                                     .then(result => {
                                         if (result) {
-                                            userFollow.save();
                                             res.status(200).json({
                                                 success: true,
                                                 message: 'User Created Successfully',

@@ -8,7 +8,10 @@ const helpers = require('../controllers/helpers/functions');
 const upload = require('../controllers/uploadFile');
 
 // Require User Model
-const User = require('../models/userData');
+const User = require('../models/user');
+
+// Require UserData Model
+const UserData = require('../models/userData');
 
 // Post MODEL
 const Post = require('../models/post');
@@ -19,36 +22,6 @@ const Post = require('../models/post');
 -> SignUp Resource
 ####################
 */
-
-router.post('/signup', (req, res, next) => {
-
-    const updatedData = {};
-    if (req.file) {
-        updatedData['profileImage'] = req.file.path;
-    }
-
-    const post = new Post({
-        user: req.body.user,
-        text: req.body.email,
-        password: hash
-    });
-
-    post.save()
-        .then(result => {
-            if (result) {
-                res.status(200).json({
-                    success: true,
-                    message: 'Post is published successfully'
-                })
-            }
-        })
-        .catch(saveError => {
-            res.status(500).json(helpers.errorJSON(saveError))
-        })
-
-});
-
-
 
 router.post('/newPost', upload.single('image'), (req, res, next) => {
 
@@ -123,6 +96,8 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
         .select('following')
         .exec()
         .then(respond => {
+            console.log(respond);
+
             if (respond.length >= 1) {
 
                 Post.find({ _id: { $in: respond} })

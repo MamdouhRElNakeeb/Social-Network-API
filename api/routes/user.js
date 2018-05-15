@@ -266,8 +266,8 @@ router.get('/getuser/:id', (req, res, next) => {
                         email: respond.userData.email,
                         mobile: respond.userData.mobile,
                         profileImage: respond.userData.profileImage,
-                        followers: respond.userData.followers,
-                        following: respond.userData.following
+                        followers: respond.followers,
+                        following: respond.following
                     }
                 })
             } else {

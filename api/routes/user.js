@@ -250,7 +250,7 @@ router.get('/getAllusers', (req, res, next) => {
 router.get('/getuser/:id', (req, res, next) => {
     const id = req.params.id;
     User.findOne({ userData: id})
-        .select('-_id')
+        .select('-_id -__v')
         .populate('userData', 'name profileImage email mobile')
         .populate('followers', 'name email')
         .populate('following', 'name mobile')
@@ -260,8 +260,15 @@ router.get('/getuser/:id', (req, res, next) => {
                 console.log(respond);
                 res.status(200).json({
                     success: true,
-                    id: respond.userData,
-                    user: respond
+                    user: {
+                        id: respond.userData._id,
+                        name: respond.userData.name,
+                        email: respond.userData.email,
+                        mobile: respond.userData.mobile,
+                        profileImage: respond.userData.profileImage,
+                        followers: respond.userData.followers,
+                        following: respond.userData.following
+                    }
                 })
             } else {
                 res.status(500).json(helpers.errorJSON('user Not Found'));

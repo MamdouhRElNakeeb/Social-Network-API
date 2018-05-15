@@ -257,6 +257,7 @@ router.get('/getuser/:id', (req, res, next) => {
         .exec()
         .then(respond => {
             if (respond) {
+                console.log(respond);
                 res.status(200).json({
                     success: true,
                     _id: respond[0].userData._id,

@@ -249,7 +249,7 @@ router.get('/getAllusers', (req, res, next) => {
 
 router.get('/getuser/:id', (req, res, next) => {
     const id = req.params.id;
-    User.find({ userData: id})
+    User.findOne({ userData: id})
         .select('-_id')
         .populate('userData', 'name profileImage email mobile')
         .populate('followers', 'name email')
@@ -260,7 +260,7 @@ router.get('/getuser/:id', (req, res, next) => {
                 console.log(respond);
                 res.status(200).json({
                     success: true,
-                    _id: respond[0].userData._id,
+                    id: respond.userData,
                     user: respond
                 })
             } else {

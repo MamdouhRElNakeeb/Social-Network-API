@@ -8,9 +8,9 @@ const helpers = require('../controllers/helpers/functions');
 const upload = require('../controllers/uploadFile');
 
 // Require User Model
-const User = require('../models/user');
+const User = require('../models/userData');
 
-// GALLERY MODEL
+// Post MODEL
 const Post = require('../models/post');
 
 
@@ -85,49 +85,14 @@ router.post('/newPost', upload.single('image'), (req, res, next) => {
 
 /*
 ####################
--> Login Resource
-####################
-*/
-router.post('/add', (req, res, next) => {
-    const text = req.body.text;
-    const userID = req.body.id;
-
-    Coiffeur.find({ email: email })
-        .exec()
-        .then(respond => {
-            if (respond.length <= 0) {
-                res.status(404).json(helpers.errorJSON('User not Found'));
-            } else {
-                bcrypt.compare(password, respond[0].password, (error, result) => {
-                    if (error) {
-                        res.status(404).json(helpers.errorJSON('Email or Password is not correct'))
-                    }
-
-                    if (result === true) {
-                        res.status(200).json({
-                            success: true,
-                            message: 'You are Logged In Successfully'
-                        });
-                    } else {
-                        res.status(404).json(helpers.errorJSON('Email or Password is not correct'))
-                    }
-                })
-            }
-        })
-        .catch(err => {
-            res.status(500).json(helpers.errorJSON(err))
-        })
-})
-
-
-/*
-####################
 -> Get All Brides Resource
 ####################
 */
 
-router.get('/getAllPosts/:id', (req, res, next) => {
-  const id = req.params.id;
+router.get('/getUserPosts/:id', (req, res, next) => {
+    
+    const id = req.params.id;
+    
     Post.find({user: id})
         .exec()
         .then(respond => {
@@ -151,6 +116,7 @@ router.get('/getAllPosts/:id', (req, res, next) => {
 })
 
 router.get('/getNewsFeed/:id', (req, res, next) => {
+    
     const id = req.params.id;
 
     User.find({_id: id})
@@ -174,7 +140,7 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
                             res.status(200).json({
                                 count: 0,
                                 success: true,
-                                message: 'Your friends don\'nt have posts right now'
+                                message: 'Your friends don\'t have posts right now'
                             })
                         }
                         
@@ -191,27 +157,10 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
                 })
             }
         })
-        
-      Post.find({user: id})
-          .exec()
-          .then(respond => {
-              if (respond.length >= 1) {
-                  res.status(200).json({
-                      success: true,
-                      count: respond.length,
-                      posts: respond
-                  })
-              } else {
-                  res.status(200).json({
-                      count: 0,
-                      success: true,
-                      message: 'There\'s not posts Right Now!'
-                  })
-              }
-          })
-          .catch(error => {
-              res.status(500).json(helpers.errorJSON(error))
-          })
+        .catch(error => {
+            res.status(500).json(helpers.errorJSON(error))
+        })
+
   })
 
 
@@ -222,8 +171,10 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
 */
 
 router.get('/getPost/:id', (req, res, next) => {
+
     const id = req.params.id;
-    Coiffeur.findById(id)
+
+    Post.findById(id)
         .exec()
         .then(respond => {
             if (respond) {
@@ -239,72 +190,6 @@ router.get('/getPost/:id', (req, res, next) => {
             res.status(500).json(helpers.errorJSON(err));
         })
 })
-
-
-/*
-####################
--> Update Profile Resource
-####################
-*/
-
-
-router.post('/updateProfileImage/:id', upload.single('profileImage'), (req, res, next) => {
-    const id = req.params.id;
-    const updatedData = {};
-    for (let key in req.body) {
-        if (req.body[key] !== '') {
-            updatedData[key] = req.body[key];
-        }
-    }
-    if (req.file) {
-        updatedData['profileImage'] = req.file.path;
-    }
-
-    Coiffeur.update({ _id: id }, { $set: updatedData })
-        .exec()
-        .then(respond => {
-            if (respond) {
-                res.status(200).json({
-                    success: true,
-                    message: 'Your Profile Image is updated successfully!'
-                })
-            }
-        })
-        .catch(err => {
-            res.status(500).json(helpers.errorJSON(err));
-        });
-})
-
-
-
-router.patch('/updateProfile/:id', (req, res, next) => {
-    const id = req.params.id;
-    const updatedData = {};
-    for (let key in req.body) {
-        if (req.body[key] !== '') {
-            updatedData[key] = req.body[key];
-        }
-    }
-    if (req.file) {
-        updatedData['profileImage'] = req.file.path;
-    }
-
-    Coiffeur.update({ _id: id }, { $set: updatedData })
-        .exec()
-        .then(respond => {
-            if (respond) {
-                res.status(200).json({
-                    success: true,
-                    message: 'Your Profile Updated Successfully!'
-                })
-            }
-        })
-        .catch(err => {
-            res.status(500).json(helpers.errorJSON(err));
-        });
-})
-
-
 
 
 /*

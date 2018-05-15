@@ -133,10 +133,12 @@ router.post('/login', (req, res, next) => {
 
 router.post('/follow', (req, res, next) => {
     const following = [];
+    const followers = [];
     const myID = req.body.myID;
     const followingID = req.body.followingID;
 
     following.push(followingID);
+    followers.push(myID);
 
     User.update({ userData: myID }, {
         $push: {
@@ -152,7 +154,7 @@ router.post('/follow', (req, res, next) => {
             User.update({ userData: followingID }, {
                 $push: {
                     followers: {
-                        $each: following
+                        $each: followers
                     }
                 }
             })

@@ -97,10 +97,11 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
         .exec()
         .then(respond => {
             console.log(respond);
+            console.log(respond[0].following);
 
             if (respond.length >= 1) {
 
-                Post.find({ _id: { $in: respond} })
+                Post.find({ _id: { $in: respond[0].following} })
                     .exec()
                     .then(respond => {
                         console.log(respond);

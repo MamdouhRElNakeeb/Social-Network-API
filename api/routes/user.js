@@ -349,7 +349,7 @@ router.post('/updateProfileCover/:id', uplaod.single('cover'), (req, res, next) 
         }
     }
     if (req.file) {
-        updatedData['profileImage'] = req.file.path;
+        updatedData['cover'] = req.file.path;
     }
     UserData.update({ _id: id }, { $set: updatedData })
         .exec()

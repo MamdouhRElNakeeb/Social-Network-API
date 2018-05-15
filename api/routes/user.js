@@ -46,7 +46,7 @@ router.post('/signup', (req, res, next) => {
                         .then(result => {
                             if(result){
                                 const user = new User({
-                                    userData: userData.id,
+                                    user: userData.id,
                                     followers:[],
                                     following:[]
                                 });
@@ -79,8 +79,6 @@ router.post('/signup', (req, res, next) => {
             res.status(500).json(helpers.errorJSON(err))
         })
 });
-
-
 
 
 /*
@@ -136,7 +134,7 @@ router.post('/follow', (req, res, next) => {
     const myID = req.body.myID;
     const followingID = req.body.followingID;
 
-    User.update({ userData: myID }, {
+    User.update({ user: myID }, {
         $addToSet: {
             following: followingID
         }
@@ -145,7 +143,7 @@ router.post('/follow', (req, res, next) => {
     .then(respond => {
         if (respond) {
 
-            User.update({ userData: followingID }, {
+            User.update({ user: followingID }, {
                 $addToSet: {
                     followers: myID
                 }
@@ -175,7 +173,7 @@ router.post('/unfollow', (req, res, next) => {
     const followingID = req.body.followingID;
 
 
-    User.update({ userData: myID }, {
+    User.update({ user: myID }, {
         $pull: {
             following: followingID
         }
@@ -184,7 +182,7 @@ router.post('/unfollow', (req, res, next) => {
     .then(respond => {
         if (respond) {
 
-            User.update({ userData: followingID }, {
+            User.update({ user: followingID }, {
                 $pull: {
                     followers: myID
                 }
@@ -216,10 +214,10 @@ router.post('/unfollow', (req, res, next) => {
 */
 router.get('/getAllusers', (req, res, next) => {
     User.find({})
-        .select('userData followers following')
-        .populate('userData', 'name profileImage email mobile')
-        .populate('followers', 'name email')
-        .populate('following', 'name mobile')
+        .select('user followers following -_id __v')
+        .populate('user', 'name profileImage email mobile')
+        .populate('followers', 'name profileImage')
+        .populate('following', 'name profileImage')
         .exec()
         .then(respond => {
             if (respond.length >= 1) {
@@ -249,11 +247,11 @@ router.get('/getAllusers', (req, res, next) => {
 
 router.get('/getuser/:id', (req, res, next) => {
     const id = req.params.id;
-    User.findOne({ userData: id})
+    User.findOne({ user: id})
         .select('-_id -__v')
-        .populate('userData', 'name profileImage email mobile')
-        .populate('followers', 'name email')
-        .populate('following', 'name mobile')
+        .populate('user', 'name profileImage email mobile')
+        .populate('followers', 'name profileImage')
+        .populate('following', 'name profileImage')
         .exec()
         .then(respond => {
             if (respond) {
@@ -261,11 +259,11 @@ router.get('/getuser/:id', (req, res, next) => {
                 res.status(200).json({
                     success: true,
                     user: {
-                        id: respond.userData._id,
-                        name: respond.userData.name,
-                        email: respond.userData.email,
-                        mobile: respond.userData.mobile,
-                        profileImage: respond.userData.profileImage,
+                        id: respond.user._id,
+                        name: respond.user.name,
+                        email: respond.user.email,
+                        mobile: respond.user.mobile,
+                        profileImage: respond.user.profileImage,
                         followers: respond.followers,
                         following: respond.following
                     }
@@ -293,7 +291,7 @@ router.post('/updateProfile/:id', (req, res, next) => {
             updatedData[key] = req.body[key];
         }
     }
-    User.update({ _id: id }, { $set: updatedData })
+    UserData.update({ _id: id }, { $set: updatedData })
         .exec()
         .then(respond => {
             if (respond) {
@@ -322,7 +320,7 @@ router.post('/updateProfileImage/:id', uplaod.single('profileImage'), (req, res,
     if (req.file) {
         updatedData['profileImage'] = req.file.path;
     }
-    User.update({ _id: id }, { $set: updatedData })
+    UserData.update({ _id: id }, { $set: updatedData })
         .exec()
         .then(respond => {
             if (respond) {
@@ -351,7 +349,7 @@ router.post('/updateProfileCover/:id', uplaod.single('cover'), (req, res, next) 
     if (req.file) {
         updatedData['profileImage'] = req.file.path;
     }
-    User.update({ _id: id }, { $set: updatedData })
+    UserData.update({ _id: id }, { $set: updatedData })
         .exec()
         .then(respond => {
             if (respond) {

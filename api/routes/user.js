@@ -250,6 +250,10 @@ router.get('/getAllusers', (req, res, next) => {
 router.get('/getuser/:id', (req, res, next) => {
     const id = req.params.id;
     User.findById(id)
+        .select('userData followers following')
+        .populate('userData', 'name profileImage email mobile')
+        .populate('followers', 'name email')
+        .populate('following', 'name mobile')
         .exec()
         .then(respond => {
             if (respond) {

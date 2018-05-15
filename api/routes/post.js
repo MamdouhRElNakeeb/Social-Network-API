@@ -92,7 +92,7 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
     
     const id = req.params.id;
 
-    User.find({_id: id})
+    User.find({ userData: id })
         .select('following')
         .exec()
         .then(respond => {

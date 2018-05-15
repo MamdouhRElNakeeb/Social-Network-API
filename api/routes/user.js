@@ -215,7 +215,7 @@ router.post('/unfollow', (req, res, next) => {
 router.get('/getAllusers', (req, res, next) => {
     User.find({})
         .select('user followers following -_id')
-        .populate('user', 'name profileImage email mobile')
+        .populate('user')
         .populate('followers', 'name profileImage')
         .populate('following', 'name profileImage')
         .exec()
@@ -249,7 +249,7 @@ router.get('/getuser/:id', (req, res, next) => {
     const id = req.params.id;
     User.findOne({ user: id})
         .select('-_id -__v')
-        .populate('user', 'name profileImage email mobile')
+        .populate('user')
         .populate('followers', 'name profileImage')
         .populate('following', 'name profileImage')
         .exec()
@@ -264,6 +264,8 @@ router.get('/getuser/:id', (req, res, next) => {
                         email: respond.user.email,
                         mobile: respond.user.mobile,
                         profileImage: respond.user.profileImage,
+                        cover: respond.user.cover,
+                        bio: respond.user.bio,
                         followers: respond.followers,
                         following: respond.following
                     }

@@ -259,6 +259,7 @@ router.get('/getuser/:id', (req, res, next) => {
             if (respond) {
                 res.status(200).json({
                     success: true,
+                    _id: respond[0].userData._id,
                     user: respond
                 })
             } else {

@@ -46,7 +46,7 @@ router.post('/signup', (req, res, next) => {
                         .then(result => {
                             if(result){
                                 const user = new User({
-                                    userData: userData._id,
+                                    userData: userData.id,
                                     followers:[],
                                     following:[]
                                 });

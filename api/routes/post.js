@@ -179,7 +179,7 @@ router.get('/getUserPosts/:id', (req, res, next) => {
     
     Post.find({user: id})
         .populate('likes', 'name profileImage')
-        .populate('comments', 'name profileImage')
+        .populate('comments.user', 'name profileImage')
         .exec()
         .then(respond => {
             if (respond.length >= 1) {
@@ -216,7 +216,7 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
 
                 Post.find({ user: { $in: respond[0].following} })
                     .populate('likes', 'name profileImage')
-                    .populate('comments', 'name profileImage')
+                    .populate('comments.user', 'name profileImage')
                     .exec()
                     .then(respond => {
                         console.log(respond);
@@ -268,7 +268,7 @@ router.get('/getPost/:id', (req, res, next) => {
 
     Post.findById(id)
         .populate('likes', 'name profileImage')
-        .populate('comments', 'name profileImage')
+        .populate('comments.user', 'name profileImage')
         .exec()
         .then(respond => {
             if (respond) {

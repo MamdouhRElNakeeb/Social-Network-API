@@ -103,7 +103,7 @@ router.post('/login', (req, res, next) => {
 
                     if (result === true) {
 
-                      const userData = {
+                      let userData = {
                           name: respond[0].name,
                           email: respond[0].email,
                           password: respond[0].password,
@@ -116,7 +116,7 @@ router.post('/login', (req, res, next) => {
                             success: true,
                             message: 'You are Logged In Successfully',
                             usesr: userData,
-                            user: respond
+                            user: respond[0]
 
                         });
                     } else {

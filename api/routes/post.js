@@ -178,6 +178,7 @@ router.get('/getUserPosts/:id', (req, res, next) => {
     const id = req.params.id;
     
     Post.find({user: id})
+        .populate('user', 'name profileImage')
         .populate('likes', 'name profileImage')
         .populate('comments.user', 'name profileImage')
         .exec()
@@ -268,6 +269,7 @@ router.get('/getPost/:id', (req, res, next) => {
     const id = req.params.id;
 
     Post.findById(id)
+        .populate('user', 'name profileImage')
         .populate('likes', 'name profileImage')
         .populate('comments.user', 'name profileImage')
         .exec()

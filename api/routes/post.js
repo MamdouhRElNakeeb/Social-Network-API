@@ -27,7 +27,7 @@ router.post('/newPost', upload.single('image'), (req, res, next) => {
 
     const text = req.body.text;
     const user = req.body.id;
-    const image = '';
+    let image = '';
 
     if(req.file){
         image = req.file.path;

@@ -215,6 +215,7 @@ router.get('/getNewsFeed/:id', (req, res, next) => {
             if (respond.length >= 1) {
 
                 Post.find({ user: { $in: respond[0].following} })
+                    .populate('user', 'name profileImage')
                     .populate('likes', 'name profileImage')
                     .populate('comments.user', 'name profileImage')
                     .exec()

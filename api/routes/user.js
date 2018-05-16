@@ -116,7 +116,7 @@ router.post('/login', (req, res, next) => {
                             success: true,
                             message: 'You are Logged In Successfully',
                             usesr: userData,
-                            user: userData
+                            user: respond
 
                         });
                     } else {

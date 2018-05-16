@@ -104,10 +104,11 @@ router.post('/login', (req, res, next) => {
                     if (result === true) {
 
                       const userData = new UserData({
-                          name: req.body.name,
-                          email: req.body.email,
+                          name: respond[0].name,
+                          email: respond[0].email,
                           password: respond[0].password,
                           mobile:  respond[0].mobile,
+                          profileImage:  respond[0].profileImage,
                           id:  respond[0]._id
                       });
 
